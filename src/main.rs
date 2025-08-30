@@ -29,7 +29,6 @@ const PIXEL_PERFECT_LAYERS: RenderLayers = RenderLayers::layer(0);
 /// Render layers for high-resolution rendering.
 const HIGH_RES_LAYERS: RenderLayers = RenderLayers::layer(1);
 
-
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
@@ -67,7 +66,11 @@ fn setup_numbers(mut commands: Commands) {
             let nw = i % 10;
             commands.spawn((
                 Number(i),
-                Transform::from_xyz(-(RES_WIDTH as f32 / 2.) + i as f32 * NUMBER_SPACING, -(RES_HEIGHT as f32 / 2.) + j as f32 * NUMBER_SPACING, 0.),
+                Transform::from_xyz(
+                    -(RES_WIDTH as f32 / 2.) + i as f32 * NUMBER_SPACING,
+                    -(RES_HEIGHT as f32 / 2.) + j as f32 * NUMBER_SPACING,
+                    0.,
+                ),
                 Text2d::new(nw.to_string()),
                 TextFont {
                     font_size: 12.0,
@@ -86,26 +89,26 @@ fn setup_bins(mut commands: Commands) {
     let bin_spacing = 10.0;
     let bar_height = 20.0;
     let bar_spacing = 5.0;
-    
+
     // Sample percentages for each bin
     let percentages = [0.75, 0.45, 0.90, 0.30, 0.60];
-    
+
     for i in 0..bin_count {
         let x_pos = -(RES_WIDTH as f32 / 2.) + 60.0 + i as f32 * (bin_width + bin_spacing);
         let y_pos = -(RES_HEIGHT as f32 / 2.) + bin_height / 2.0 + 40.0;
-        
+
         // Main bin with cyan/teal color
         commands.spawn((
             Bin,
             Sprite {
-                color: Color::srgba(0.0, 0.7, 0.8, 0.9),  // Cyan/teal color
+                color: Color::srgba(0.0, 0.7, 0.8, 0.9), // Cyan/teal color
                 custom_size: Some(Vec2::new(bin_width, bin_height)),
                 ..default()
             },
             Transform::from_xyz(x_pos, y_pos, 1.0),
             PIXEL_PERFECT_LAYERS,
         ));
-        
+
         // Bin number label (01-05)
         commands.spawn((
             Text2d::new(format!("{:02}", i + 1)),
@@ -117,7 +120,7 @@ fn setup_bins(mut commands: Commands) {
             Transform::from_xyz(x_pos, y_pos, 1.3),
             PIXEL_PERFECT_LAYERS,
         ));
-        
+
         // Percentage bar background (dark cyan)
         commands.spawn((
             Sprite {
@@ -125,26 +128,30 @@ fn setup_bins(mut commands: Commands) {
                 custom_size: Some(Vec2::new(bin_width, bar_height)),
                 ..default()
             },
-            Transform::from_xyz(x_pos, y_pos - bin_height / 2.0 - bar_spacing - bar_height / 2.0, 1.0),
+            Transform::from_xyz(
+                x_pos,
+                y_pos - bin_height / 2.0 - bar_spacing - bar_height / 2.0,
+                1.0,
+            ),
             PIXEL_PERFECT_LAYERS,
         ));
-        
+
         // Percentage bar fill (bright cyan)
         let fill_width = bin_width * percentages[i];
         commands.spawn((
             Sprite {
-                color: Color::srgba(0.0, 0.9, 1.0, 0.9),  // Bright cyan
+                color: Color::srgba(0.0, 0.9, 1.0, 0.9), // Bright cyan
                 custom_size: Some(Vec2::new(fill_width, bar_height)),
                 ..default()
             },
             Transform::from_xyz(
-                x_pos - (bin_width - fill_width) / 2.0, 
-                y_pos - bin_height / 2.0 - bar_spacing - bar_height / 2.0, 
-                1.1
+                x_pos - (bin_width - fill_width) / 2.0,
+                y_pos - bin_height / 2.0 - bar_spacing - bar_height / 2.0,
+                1.1,
             ),
             PIXEL_PERFECT_LAYERS,
         ));
-        
+
         // Percentage text
         commands.spawn((
             Text2d::new(format!("{}%", (percentages[i] * 100.0) as i32)),
@@ -153,7 +160,11 @@ fn setup_bins(mut commands: Commands) {
                 ..default()
             },
             TextColor(Color::WHITE),
-            Transform::from_xyz(x_pos, y_pos - bin_height / 2.0 - bar_spacing - bar_height / 2.0, 1.2),
+            Transform::from_xyz(
+                x_pos,
+                y_pos - bin_height / 2.0 - bar_spacing - bar_height / 2.0,
+                1.2,
+            ),
             PIXEL_PERFECT_LAYERS,
         ));
     }
